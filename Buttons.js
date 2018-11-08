@@ -7,13 +7,15 @@ import {
 import Style from './Style';
 
 export default class Buttons extends Component {
-    
+
     render() {
         return (
-            <View style={Style.Btn}>
+            <TouchableHighlight style={Style.Btn}
+                                underlayColor="#FF9500"
+                                onPress={this.props.onPress}>
                 <Text style={Style.BtnText}>{this.props.value}</Text>
-            </View>
+            </TouchableHighlight>
         )
     }
-    
+
 }
