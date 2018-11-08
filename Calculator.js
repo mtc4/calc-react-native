@@ -5,6 +5,7 @@ import {
     AppRegistry
 } from 'react-native';
 import Button from './Buttons';
+import Style from './Style';
 const buttonsList = [
     [1, 2, 3, '/'],
     [4, 5, 6, '*'],
@@ -13,7 +14,13 @@ const buttonsList = [
 ];
 class Calculator extends Component {
 
-import Style from './Style';
+    constructor(props) {
+        super(props);
+        
+        this.state = {
+            value: 0
+        }
+    }
 
 render() {
     return (
@@ -38,7 +45,7 @@ renderButtons() {
                 let input = row[i];
 
                 row.push(
-                    <Button value={input} key={r + "-" + i} />
+                    <Button value={input} onPress={this.onButtonPress.bind(this, input)} key={r + "-" + i} />
                 );
             }
 
@@ -49,6 +56,17 @@ renderButtons() {
 
 }
 
+onButtonPress(input) {
+	switch (typeof input) 
+		case 'number':
+                return this.inputHandler(input)
+        }
+    }
 }
-
+inputHandler(num) {
+        let value = (this.state.value) + num;
+        this.setState({
+            value: value
+        })
+}
 AppRegistry.registerComponent('Calculator', () => Calculator);
