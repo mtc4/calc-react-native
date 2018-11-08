@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import {
     View,
-    Text
+    Text,
+    TouchableHighlight
 } from 'react-native';
 
 import Style from './Style';
