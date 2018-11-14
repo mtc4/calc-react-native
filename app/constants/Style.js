@@ -1,6 +1,8 @@
 import { StyleSheet } from 'react-native';
 
 const width = '92%';
+const height = '80%';
+
 var Style = StyleSheet.create({
 	screen: {
 		flex: 1,
@@ -12,16 +14,17 @@ var Style = StyleSheet.create({
 		flex: 1,
 		color: 'white'
 	},
-	column: {
-		flex: 1, 
-		flexDirection: 'row',
-		padding: 0,
+	row: {
+		flex: 1,
+		alignItems: 'baseline',
+		flexDirection: 'row'
 	},
 	display: {
 		flex: 4, 
 		width,
 		alignItems: 'flex-end',
-		flexDirection: 'row-reverse'
+		flexDirection: 'row-reverse',
+		alignContent: 'center'
 	},
 	displayText: {
 		fontFamily: "System",
@@ -33,18 +36,17 @@ var Style = StyleSheet.create({
 	},
 	buttons: {
 		flex: 6, 
-		marginBottom: 80,
-		width
+		width,
+		marginBottom: 80
 	},
     Btn: {
 		flex: 1,
 		alignItems: 'center',
 		justifyContent: 'center',
 		backgroundColor: '#333333',
-		borderRadius: 100,
+		borderRadius: 50,
 		marginLeft: 6,
 		marginRight: 6,
-		width: 85,
 		height: 85
 	},
 	BtnRight: {
@@ -55,7 +57,6 @@ var Style = StyleSheet.create({
 		borderRadius: 100,
 		marginLeft: 6,
 		marginRight: 6,
-		width: 85,
 		height: 85
 	},
 	BtnTop: {
@@ -71,7 +72,6 @@ var Style = StyleSheet.create({
 	},
 	BtnZero: {
 		flex: 2,
-		alignItems: 'center',
 		justifyContent: 'center',
 		borderWidth: 0.45,
 		backgroundColor: '#333333',
@@ -84,6 +84,12 @@ var Style = StyleSheet.create({
 		fontSize: 32,
 		color: '#ffffff'
 	},
+	BtnZeroTextWhite: {
+		fontSize: 32,
+		color: '#ffffff',
+		paddingLeft: 35
+	},
+	
 	BtnTextBlack: {
 		fontSize: 32,
 		color: '#000000'

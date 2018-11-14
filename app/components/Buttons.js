@@ -1,68 +1,208 @@
-import React, { Component } from 'react';
-import {
-    View,
-    Text,
-    TouchableHighlight
-} from 'react-native';
+import React, { Component } from 'react'
+import { Text, TouchableOpacity } from 'react-native'
 
 import Style from '../constants/Style';
 
-const buttonsList = [
-    [ 'C', '+/-', '%', '÷'],
-    ['7', '8', '9', 'x'],
-    ['4', '5', '6', '-'],
-    ['1', '2', '3', '+'],
-    ['0', ',', '=']
-];
-
-export default class Buttons extends Component {
-
-    render() {
-        let views = [];
-        for (var r = 0; r < buttonsList.length; r++) {
-            let row = buttonsList[r];
-            let inputRow = [];
-            for (var i = 0; i < row.length; i ++) {
-                let input = row[i];
-                let style = r === 0 && i < 3 ? Style.BtnTop : (row.length-1) === i ? Style.BtnRight : Style.Btn;
-                let textColor = r === 0 && i < 3 ? Style.BtnTextBlack : Style.BtnTextWhite;
-                    style = input === '0' ? Style.BtnZero : style;
-                inputRow.push(
-                    (
-                        <TouchableHighlight key={"th-" + i} style={style}
-                                            underlayColor="#575757"
-                                            onPress={this.props.onPress}>
-                            <Text style={textColor}>{input}</Text>
-                        </TouchableHighlight>
-                    )
-                )
-            }
-            views.push(<View style={Style.column} key={"col-" + r}>{inputRow}</View>)
-
-        }
-
-        return views;
-    }
-/*
-    _renderButtons() {
-
-        let views = [];
-        for (var r = 0; r < buttonsList.length; r ++) {
-            let row = buttonsList[r];
-            let inputRow = [];
-            for (var i = 0; i < row.length; i ++) {
-                let input = row[i];
-
-                inputRow.push(
-                    <Buttons value={input} style={Style.BtnRight} onPress={this.onButtonPress.bind(this, input)} key={r + "-" + i} />
-                );
-            }
-
-            views.push(<View style={Style.column} key={"row-" + r}>{inputRow}</View>)
-        }
-
-        return views;
-    }
-    */
-
+const BaseButton = (props) => {
+  return (
+    <TouchableOpacity style={props.buttonStyle} onPress={props.pressHandler}>
+      <Text style={props.buttonText}>
+        {props.value}
+      </Text>
+    </TouchableOpacity>
+  )
 }
+
+export class ButtonDigit extends Component {
+  pressHandler = () => {
+    const { currentState, value, onClick } = this.props;
+    if(currentState !== '0') {
+      onClick(currentState + value, value);
+    } else {
+      onClick(value);
+    }
+  }
+
+  render() {
+    return (
+      <BaseButton
+        buttonStyle={Style.Btn}
+        pressHandler={this.pressHandler}
+        buttonText={Style.BtnTextWhite}
+        value={this.props.value}
+      />
+    )
+  }
+}
+
+export class ButtonZero extends Component {
+  pressHandler = () => {
+    const { currentState, value, onClick } = this.props;
+    if(currentState === '0') {
+      onClick('0');
+    } else {
+      onClick(currentState + '0');
+    }
+  }
+
+  render() {
+    return (
+      <BaseButton
+        buttonStyle={Style.BtnZero}
+        pressHandler={this.pressHandler}
+        buttonText={Style.BtnZeroTextWhite}
+        value={this.props.value}
+      />
+    )
+  }
+}
+
+export class ButtonClear extends Component {
+  pressHandler = () => {
+    const { currentState, value, onClick } = this.props;
+    if(value === 'AC') {
+      onClick('0',' ');
+    }
+  }
+
+  render() {
+    return (
+      <BaseButton
+        buttonStyle={Style.BtnTop}
+        pressHandler={this.pressHandler}
+        buttonText={Style.BtnTextBlack}
+        value={this.props.value}
+      />
+    )
+  }
+}
+
+export class ButtonOperation extends Component {
+  pressHandler = () => {
+    const { currentState, value, onClick } = this.props;
+    let last = currentState.toString().charAt(currentState.length - 1);
+    console.log(last)
+    let operations = ['+','-','/','*'];
+    let signs = ['+','-','÷','×'];
+    let newValue = value;
+
+    signs.forEach(sign => {
+        let index = signs.indexOf(sign);
+        if (value === sign) {
+            newValue = value.replace(sign, operations[index]);
+        }
+    });
+    if('+-*/'.includes(last)) {
+      onClick(currentState);
+    } else {
+      onClick(currentState + newValue);
+    }
+  }
+
+  render() {
+    return (
+      <BaseButton
+        buttonStyle={Style.BtnRight}
+        pressHandler={this.pressHandler}
+        buttonText={Style.BtnTextWhite}
+        value={this.props.value}
+      />
+    )
+  }
+}
+
+export class ButtonPlusMinus extends Component {
+  pressHandler = () => {
+    const { currentState, value, onClick } = this.props;
+    if(currentState === '0') {
+      onClick(currentState);
+    } else {
+      let symbol = currentState.toString().charAt(0);
+      let result = '';
+      if(symbol === '-') { result = currentState.slice(1); }
+      else { result = `-${currentState}`; }
+      
+      onClick(result);
+    }
+
+  }
+
+  render() {
+    return (
+      <BaseButton
+        buttonStyle={Style.BtnTop}
+        pressHandler={this.pressHandler}
+        buttonText={Style.BtnTextBlack}
+        value={this.props.value}
+      />
+    )
+  }
+}
+
+export class ButtonComma extends Component {
+  pressHandler = () => {
+    const { currentState, value, onClick } = this.props;
+    if(currentState.toString().includes(',')) {
+      onClick(currentState);
+    } else {
+      onClick(currentState + ',');
+    }
+  }
+
+  render() {
+    return (
+      <BaseButton
+        buttonStyle={Style.Btn}
+        pressHandler={this.pressHandler}
+        buttonText={Style.BtnTextWhite}
+        value={this.props.value}
+      />
+    )
+  }
+}
+
+export class ButtonPercent extends Component {
+  pressHandler = () => {
+    const { currentState, value, onClick } = this.props;
+    let result = +currentState/100;
+    onClick(result);
+  }
+
+  render() {
+    return (
+      <BaseButton
+        buttonStyle={Style.BtnTop}
+        pressHandler={this.pressHandler}
+        buttonText={Style.BtnTextBlack}
+        value={this.props.value}
+      />
+    )
+  }
+}
+
+export class ButtonResult extends Component {
+  pressHandler = () => {
+    const { currentState, value, onClick, prev } = this.props;
+    let operations = ['+','-','/','*'];
+    operations.forEach(operation => {
+      currentState.split(operation).forEach((elem, index) => {
+        if(index === 1 && elem !== '') {
+          let result = (new Function(`return ${currentState}`))();
+          onClick(result.toString().slice(0,15), `${currentState}`);
+        }
+      });
+    });
+  }
+
+  render() {
+    return (
+      <BaseButton
+        buttonStyle={Style.BtnRight}
+        pressHandler={this.pressHandler}
+        buttonText={Style.BtnTextWhite}
+        value={this.props.value}
+      />
+    )
+  }
+}
+
